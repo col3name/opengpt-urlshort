@@ -66,7 +66,6 @@ class UrlShortenerController @Autowired constructor(
 
         return shortUrl
         // Return the short URL to the user
-//        return "http://localhost:8080/$shortUrl"
     }
 
     @GetMapping("/{shortUrl}")
@@ -144,16 +143,16 @@ class UrlShortenerController @Autowired constructor(
     }
 
     @DeleteMapping("/delete")
-    fun deleteUrl(@RequestParam("url") url: String, request: HttpServletRequest): String {
+    fun deleteUrl(@RequestParam("url") url: Int, request: HttpServletRequest): String {
         println("markUrl  $url ${request.remoteAddr}")
         if (!ipRateLimiter.tryAcquire(request.remoteAddr)) {
             return "Too many request"
         }
         // Connect to the database and delete the URL
         val connection = getConnection()
-        val sql = "DELETE FROM url_shortener WHERE short_url = ?"
+        val sql = "DELETE FROM url_shortener WHERE id = ?"
         val pstmt = connection.prepareStatement(sql)
-        pstmt.setString(1, url)
+        pstmt.setInt(1, url)
         val rowAffected = pstmt.executeUpdate()
         connection.close()
         return isSuccessUpdate(rowAffected)
