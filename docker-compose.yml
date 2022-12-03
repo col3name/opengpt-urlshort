@@ -1,0 +1,20 @@
+version: '3.8'
+services:
+  url-shortener:
+    image: url-shortener:latest
+    ports:
+      - '8080:8080'
+    depends_on:
+      - db
+  db:
+    image: postgres:latest
+    volumes:
+      - my-db-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: url_short
+      POSTGRES_USER: url_short
+      POSTGRES_PASSWORD: url_short
+    ports:
+      - '5432:5432'
+volumes:
+  my-db-data:
