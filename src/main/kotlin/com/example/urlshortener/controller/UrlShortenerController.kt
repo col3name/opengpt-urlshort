@@ -21,14 +21,18 @@ class UrlShortenerController @Autowired constructor(
 ) {
 
     private fun getConnection(): Connection {
-        return DriverManager.getConnection("jdbc:postgresql://localhost:5432/url_short", "url_short", "url_short")
+        val host = "au77784bkjx6ipju.cbetxkdyhwsb.us-east-1.rds.amazonaws.com"
+        val user = "zlhlkevzdggbg2j6"
+        val password = "kxzbaikp2rk7q2cv"
+        val db = "ws9bhzyzyhnc8jtb"
+        return DriverManager.getConnection("jdbc:mysql://$host:3306/$db", user, password)
     }
 
     @GetMapping("/urls")
     fun getAllUrls(): List<Map<String, Any>> {
         val rows = mutableListOf<Map<String, Any>>()
         try {
-            Class.forName("org.postgresql.Driver")
+            Class.forName("com.mysql.cj.jdbc.Driver")
             val connection = getConnection()
             val statement = connection.createStatement()
             val resultSet = statement.executeQuery("SELECT * FROM url_shortener")
@@ -81,7 +85,7 @@ class UrlShortenerController @Autowired constructor(
         // Connect to the database and insert a new row with the IP address, URL, and count
         val connection = getConnection()
         val statement = connection.createStatement()
-        statement.executeUpdate("INSERT INTO url_statistics (ip_address, url, count) VALUES ('$ipAddress', '$shortUrl', 1) ON CONFLICT (ip_address, url) DO UPDATE SET count = url_statistics.count + 1")
+        statement.executeUpdate("INSERT INTO url_statistics (ip_address, url, count) VALUES ('$ipAddress', '$shortUrl', 1) ON DUPLICATE KEY UPDATE count = count + 1")
         val resultSet = statement.executeQuery("SELECT original_url FROM url_shortener WHERE short_url = '$shortUrl'")
         if (!resultSet.next()) {
             connection.close()

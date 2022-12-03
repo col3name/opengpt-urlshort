@@ -16,5 +16,18 @@ services:
       POSTGRES_PASSWORD: url_short
     ports:
       - '5432:5432'
+  mysqldb:
+    image: mysql
+    ports:
+      - '3306:3306'
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: url_short
+      MYSQL_DATABASE: url_short
+      MYSQL_USER: url_short
+      MYSQL_PASSWORD: url_short
 volumes:
   my-db-data:
+  db_data:
