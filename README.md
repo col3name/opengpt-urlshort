@@ -1,6 +1,6 @@
 # opengpt-urlshort
 
-url service written using chat.openai
+### url service written using chat.openai. 90%+ code written ai
 
 api:
  getAllUrls, get: /urls
